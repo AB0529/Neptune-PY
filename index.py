@@ -16,16 +16,8 @@ nep = commands.Bot(
     ownerIds=[184157133187710977, 251091302303662080],
     )
 
-# Setup cogs
-cogs_dir = 'Cogs'
-cogs_list = os.listdir(cogs_dir)
-
-# Load cogs
-for cog in [f.replace('.py', '') for f in cogs_list if os.path.isfile(os.path.join(cogs_dir, f))]:
-    try:
-        nep.load_extension(cogs_dir + '.' + cog)
-    except (discord.ClientException, ModuleNotFoundError):
-        print(f'Failed to load cog {cog}')
+# Load cogs from cogs dir
+[nep.load_extension(f'Cogs.{f.replace(".py", "")}') for f in os.listdir('Cogs') if not f.startswith('__')]
 
 # Login
 nep.run(os.getenv('TOKEN'))
