@@ -1,6 +1,8 @@
 # Import libs
+import sys
 import os
 
+import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 
@@ -14,25 +16,16 @@ nep = commands.Bot(
     ownerIds=[184157133187710977, 251091302303662080],
     )
 
-# Ready event
-@nep.event
-async def on_ready():
-    print(f'Client logged in as {nep.user.name}')
+# Setup cogs
+cogs_dir = 'Cogs'
+cogs_list = os.listdir(cogs_dir)
 
-# TODO: setup cogs
-# Test command
-@nep.command(name='ping', description='Usual ping-pong command.')
-async def ping(c):
-    await c.send('Pongy pong pong')
-
-@nep.command(name='kill', description='Logs bot out and kills process')
-async def kill(c):
-    if await nep.is_owner(c.message.author) == False:
-        await c.send('Not owner.')
-        return
-    
-    await c.send('Killing...')
-    await nep.logout()
+# Load cogs
+for cog in [f.replace('.py', '') for f in cogs_list if os.path.isfile(os.path.join(cogs_dir, f))]:
+    try:
+        nep.load_extension(cogs_dir + '.' + cog)
+    except (discord.ClientException, ModuleNotFoundError):
+        print(f'Failed to load cog {cog}')
 
 # Login
 nep.run(os.getenv('TOKEN'))
