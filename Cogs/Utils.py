@@ -13,6 +13,9 @@ class Utils(commands.Cog):
         embed = discord.Embed(description=content, color=self.r_color)
         return embed
 
+    # Easy error handle
+    async def error(self, c, _type, content):
+        await c.send(embed=self.embed(f':x: Error | Oh nose, an **error occured**!\n```css\nType: {_type}\nError: {content}\n```'))
 
 def setup(nep):
     nep.add_cog(Utils(nep))
