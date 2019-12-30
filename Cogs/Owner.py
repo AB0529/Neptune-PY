@@ -36,7 +36,19 @@ class Owner(commands.Cog):
         
         # Set the activity
         await self.nep.change_presence(activity=discord.Activity(name=status, type=discord.ActivityType[_type.lower()]))
-        await self.util.embed(f'✅ | Activity changed to `{_type.upper()} {status}`')
+        await self.util.embed(c, f'✅ | Activity changed to `{_type.upper()} {status}`')
+    # Reload cog command
+    @commands.command(
+        name='reload',
+        aliases=['re'],
+        hidden=True,
+        descrription='Reloads a specified cog'
+    )
+    @commands.is_owner()
+    async def reload(self, c, cog):
+        # Reload cog
+        self.nep.reload_extension(f'Cogs.{cog.capitalize()}')
+        await self.util.embed(c, f'🌀 | Cog `{cog}` has been reloaded')
 
 def setup(nep):
     nep.add_cog(Owner(nep))
