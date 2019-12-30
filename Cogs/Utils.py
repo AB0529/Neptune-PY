@@ -9,13 +9,13 @@ class Utils(commands.Cog):
         self.r_color = random.randint(0, 0xffffff)
 
     # Easy embed
-    def embed(self, content):
+    async def embed(self, c, content):
         embed = discord.Embed(description=content, color=self.r_color)
-        return embed
+        await c.send(embed=embed)
 
     # Easy error handle
-    async def error(self, c, _type, error='Error handler errored, wack'):
-        await c.send(embed=self.embed(f':x: Error | Oh nose, an **error occured**!\n```css\nType: {_type}\nError: {error}\n```'))
+    async def error(self, c, _type='Idfk', error='Error handler errored, wack'):
+        await self.embed(c, f':x: Error | Oh nose, an **error occured**!\n```css\nType: {_type}\n\n{error}\n```')
 
 def setup(nep):
     nep.add_cog(Utils(nep))

@@ -1,4 +1,5 @@
 from discord.ext import commands
+import discord
 
 # Owner category
 class Owner(commands.Cog):
@@ -29,10 +30,13 @@ class Owner(commands.Cog):
         status = ' '.join(status)
         acceptable_tpyes = ['playing', 'watching', 'listening']
 
+        # Make sure correct type is used
         if _type not in acceptable_tpyes:
             return await self.util.error(c, 'Invalid Args', f'`{_type}` is not an acceptable type!')
         
-        await c.send(f'Type: {_type}\nStatus: {" ".join(status)}')
+        # Set the activity
+        await self.nep.change_presence(activity=discord.Activity(name=status, type=discord.ActivityType[_type.lower()]))
+        await self.util.embed(f'✅ | Activity changed to `{_type.upper()} {status}`')
 
 def setup(nep):
     nep.add_cog(Owner(nep))
