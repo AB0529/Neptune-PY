@@ -1,4 +1,4 @@
-# Neptune-TS
+# Neptune-PY
 
 This is the Python varient of [Neptune](https://github.com/MoistSenpai/Neptune) which is built in JavaScript.
 
