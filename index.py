@@ -14,6 +14,7 @@ nep = commands.Bot(
     description='A Python rewrite of Neptune.',
     command_prefix=os.getenv('PREFIX'),
     ownerIds=[184157133187710977, 251091302303662080],
+    case_insensitive=True
     )
 # nep.remove_command('help')
 

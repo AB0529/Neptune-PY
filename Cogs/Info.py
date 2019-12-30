@@ -8,6 +8,7 @@ class Info(commands.Cog):
         self.nep = nep
         self.util = nep.get_cog('Utils')
 
+    # -----------------------------------------------------------------
 
     # Ping command
     @commands.command(
@@ -20,6 +21,8 @@ class Info(commands.Cog):
             title='🏓 Ping my pong', 
             description=f'⏱️ | **Message Delay**: `{round(self.nep.latency, 2)}sec`\n🔮 | **Shard**: `{self.nep.shard_id}`', 
             color=self.util.r_color))
+
+    # -----------------------------------------------------------------
 
 def setup(nep):
     nep.add_cog(Info(nep))

@@ -7,6 +7,8 @@ class Owner(commands.Cog):
         self.nep = nep
         self.util = nep.get_cog('Utils')
 
+    # -----------------------------------------------------------------
+
     # Kill command
     @commands.command(
         name='kill',
@@ -18,6 +20,9 @@ class Owner(commands.Cog):
     async def kill(self, c):
         await c.send('Killing...')
         await self.nep.logout()
+
+    # -----------------------------------------------------------------
+
     # Set status command
     @commands.command(
         name='status',
@@ -37,6 +42,9 @@ class Owner(commands.Cog):
         # Set the activity
         await self.nep.change_presence(activity=discord.Activity(name=status, type=discord.ActivityType[_type.lower()]))
         await self.util.embed(c, f'✅ | Activity changed to `{_type.upper()} {status}`')
+
+    # -----------------------------------------------------------------
+
     # Reload cog command
     @commands.command(
         name='reload',
@@ -49,6 +57,8 @@ class Owner(commands.Cog):
         # Reload cog
         self.nep.reload_extension(f'Cogs.{cog.capitalize()}')
         await self.util.embed(c, f'🌀 | Cog `{cog}` has been reloaded')
+    
+    # -----------------------------------------------------------------
 
 def setup(nep):
     nep.add_cog(Owner(nep))

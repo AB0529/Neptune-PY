@@ -7,6 +7,8 @@ class Events(commands.Cog):
         self.nep = nep
         self.util = self.nep.get_cog('Utils')
 
+    # -----------------------------------------------------------------
+
     # On command error
     @commands.Cog.listener()
     async def on_command_error(self, ctx, exc):
@@ -16,6 +18,8 @@ class Events(commands.Cog):
 
         print(f'[{ctx.author.name}{ctx.author.discriminator}] - {ctx.author.guild.id}] <> {exc}')
         await self.util.error(ctx, 'Command Error', exc)
+
+    # -----------------------------------------------------------------
 
 def setup(nep):
     nep.add_cog(Events(nep))
