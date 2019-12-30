@@ -109,8 +109,9 @@ class Owner(commands.Cog):
     @commands.is_owner()
     async def exec(self, c, *, cmd='ls'):
         # Disable rm 
-        if cmd[0] == 'rm':
+        if 'rm' in cmd:
             await c.send('No rm >:(')
+            return
         # Run command
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         # Get outputs
