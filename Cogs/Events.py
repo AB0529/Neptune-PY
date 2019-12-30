@@ -5,17 +5,17 @@ from discord.ext import commands
 class Events(commands.Cog):
     def __init__(self, nep):
         self.nep = nep
-        self.util = nep.get_cog('Utils')
-
-    # Ready event
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print(f'Client logged in as {self.nep.user.name}')
+        self.util = self.nep.get_cog('Utils')
 
     # On command error
     @commands.Cog.listener()
     async def on_command_error(self, ctx, exc):
-        await self.util.error(ctx, 'Command Error', str(exc))
+        # Ignore command not existing
+        if 'is not found' in str(exc):
+            return
+
+        print(f'[{ctx.author.name}{ctx.author.discriminator}] - {ctx.author.guild.id}] <> {exc}')
+        await self.util.error(ctx, 'Command Error', exc)
 
 def setup(nep):
     nep.add_cog(Events(nep))

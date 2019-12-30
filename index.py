@@ -20,5 +20,12 @@ nep = commands.Bot(
 # Load cogs from cogs dir
 [nep.load_extension(f'Cogs.{f.replace(".py", "")}') for f in os.listdir('Cogs') if not f.startswith('__')]
 
+# Ready event
+@nep.event
+async def on_ready():
+    print(f'Client logged in as {nep.user.name}')
+    # Reload events
+    nep.reload_extension('Cogs.Events')
+
 # Login
 nep.run(os.getenv('TOKEN'))

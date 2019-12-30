@@ -14,8 +14,8 @@ class Utils(commands.Cog):
         return embed
 
     # Easy error handle
-    async def error(self, c, _type, content):
-        await c.send(embed=self.embed(f':x: Error | Oh nose, an **error occured**!\n```css\nType: {_type}\nError: {content}\n```'))
+    async def error(self, c, _type, error='Error handler errored, wack'):
+        await c.send(embed=self.embed(f':x: Error | Oh nose, an **error occured**!\n```css\nType: {_type}\nError: {error}\n```'))
 
 def setup(nep):
     nep.add_cog(Utils(nep))
