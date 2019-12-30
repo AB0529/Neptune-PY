@@ -20,6 +20,11 @@ class Info(commands.Cog):
             title='🏓 Ping my pong', 
             description=f'⏱️ | **Message Delay**: `{round(self.nep.latency, 2)}sec`\n🔮 | **Shard**: `{self.nep.shard_id}`', 
             color=self.util.r_color))
+
+def setup(nep):
+    nep.add_cog(Info(nep))
+
+'''
     # Help command
     @commands.command(
         name='help',
@@ -45,6 +50,4 @@ class Info(commands.Cog):
 
         # Handle args
         print(self)
-
-def setup(nep):
-    nep.add_cog(Info(nep))
+'''
