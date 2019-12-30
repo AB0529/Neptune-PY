@@ -1,5 +1,5 @@
 from discord.ext import commands
-import discord
+import discord, sys, ast, subprocess
 
 # Owner category
 class Owner(commands.Cog):
@@ -58,6 +58,70 @@ class Owner(commands.Cog):
         self.nep.reload_extension(f'Cogs.{cog.capitalize()}')
         await self.util.embed(c, f'🌀 | Cog `{cog}` has been reloaded')
     
+    # -----------------------------------------------------------------
+
+    # Eval command
+    @commands.command(
+        name='eval',
+        aliases=['ev'],
+        hidden=True,
+        description='Evaluates Python code'
+    )
+    @commands.is_owner()
+    async def eval(self, c, *, code):
+        code = code.strip('` ')
+        # Add indentation
+        code = '\n'.join(f'    {i}' for i in code.splitlines())
+        # Warp code 
+        body = f'async def _eval_code_gamer():\n{code}'
+
+        parsed = ast.parse(body)
+        body = parsed.body[0].body
+
+        # Allow for indents
+        self.util.insert_returns(body)
+
+        # Create environment
+        env = {
+            'bot': c.bot,
+            'discord': discord,
+            'commands': commands,
+            'c': c,
+            '__import__': __import__
+        }
+
+        # Compile code
+        exec(compile(parsed, filename='<ast>', mode='exec'), env)
+        result = (await eval(f"_eval_code_gamer()", env))
+
+        # Send result
+        await self.util.embed(c, f'🤖 | Eval Resulsts:\n```py\n{result}\n```')
+
+    # -----------------------------------------------------------------
+
+    # Exec command
+    @commands.command(
+        name='exec',
+        aliases=['ex'],
+        hidden=True,
+        description='Execucutes Unix commands'
+    )
+    @commands.is_owner()
+    async def exec(self, c, *, cmd='ls'):
+        # Disable rm 
+        if cmd[0] == 'rm':
+            await c.send('No rm >:(')
+        # Run command
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+        # Get outputs
+        (output, err) = proc.communicate()
+        output = str(output).split('\\n')
+        proc_status = proc.wait()
+        nl = '\n'
+        b = 'b\''
+
+        await self.util.embed(c, f'💻 | Exec results:\n```\n{nl.join(output).replace(b, "")}\n\nStatus: {proc_status}\n```')
+
     # -----------------------------------------------------------------
 
 def setup(nep):
