@@ -29,12 +29,12 @@ class Nep(commands.Bot):
     async def load_all_extensions(self):
         # Get cogs
         cogs = [f.replace('.py', '') for f in os.listdir('Cogs') if not f.startswith('__')]
-        print(cogs)
+
         # Attempt to load cogs
         for cog in cogs:
             try:
                 self.load_extension(f'Cogs.{cog}')
-                self.util.log('Cogs', f'Cog {colored(os.path.basename(cog), "magenta")} loaded')
+                self.util.log('Cogs', f'Cog loaded', os.path.basename(cog))
             except Exception as e:
                 self.util.log('Cogs', f'Error loading cog {colored(os.path.basename(cog), "magenta")} !', 'ERROR')
 
