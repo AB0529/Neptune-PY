@@ -1,12 +1,9 @@
 # Imports
 import asyncio
 import os
-import importlib
 
+from Classes.Nep import Nep
 from dotenv import load_dotenv
-
-# Import classes
-Nep = importlib.import_module('Classes.Nep')
 
 # Setup env variables
 load_dotenv()
@@ -22,14 +19,16 @@ config = {
 # Sets up bot
 async def main():
     # Create bot
-    nep = Nep.__init(config)
-    
+    nep = Nep(config)
+
     # Login bot and logout on process end
     try:
+
+
         # Login
         await nep.start(token)
-        # Load all cogs
-        await nep.load_cogs()
+
+
     except KeyboardInterrupt:
         await nep.logout()
 
