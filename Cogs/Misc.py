@@ -17,7 +17,7 @@ class Misc(commands.Cog):
         await c.send(embed=discord.Embed(
             title='🏓 Ping my pong', 
             description=f'⏱️ | **Message Delay**: `{round(self.nep.latency, 2)}sec`\n🔮 | **Shard**: `{self.nep.shard_id}`', 
-            color=self.util.r_color()))
+            color=self.nep.util.r_color()))
 
     # ---------------------------------------------------
 
