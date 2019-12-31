@@ -27,7 +27,7 @@ class Utils:
 
     # Retrive list of all cogs
     def get_all_cogs(self):
-        cogs = [self.nep.get_cog(f'Cogs.{f.replace(".py", "")}') for f in os.listdir('Cogs') if not f.startswith('__')]
+        cogs = [f.replace('.py', '') for f in os.listdir('Cogs') if not f.startswith('__')]
 
         return cogs
 

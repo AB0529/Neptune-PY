@@ -41,12 +41,12 @@ class Owner(commands.Cog):
 
         # Reloads all cogs
         if cog.lower() == 'all':
-            await self.util.embed(c, f'🌀 | Cogs `{", ".join(cogs)}` have been reloaded')
-            self.nep.load_all_cogs()
+            await self.nep.util.embed(c, f'🌀 | Cogs `{", ".join(cogs)}` have been reloaded')
+            return await self.nep.reload_all_extensions()
 
         # Reload cog
         self.nep.reload_extension(f'Cogs.{cog.capitalize()}')
-        await self.util.embed(c, f'🌀 | Cog `{cog}` has been reloaded')
+        await self.nep.util.embed(c, f'🌀 | Cog `{cog}` has been reloaded')
 
     # ---------------------------------------------------
 

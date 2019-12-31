@@ -28,7 +28,7 @@ class Nep(commands.Bot):
     # Loads all cogs from Cogs folder
     async def load_all_extensions(self):
         # Get cogs
-        cogs = [f.replace('.py', '') for f in os.listdir('Cogs') if not f.startswith('__')]
+        cogs = self.util.get_all_cogs()
 
         # Attempt to load cogs
         for cog in cogs:
@@ -37,6 +37,20 @@ class Nep(commands.Bot):
                 self.util.log('Cogs', f'Cog loaded', os.path.basename(cog))
             except Exception as e:
                 self.util.log('Cogs', f'Error loading cog {colored(os.path.basename(cog), "magenta")} !', 'ERROR')
+
+    # ---------------------------------------------------
+    
+    # Reloads all cogs 
+    async def reload_all_extensions(self):
+        # Get cogs
+        cogs = self.util.get_all_cogs()
+
+        # Attempt reload
+        for cog in cogs:
+            try:
+                self.reload_extension(f'Cogs.{cog}')
+            except Exception as e:
+                self.util.log('Cogs', f'Error reloading cog {colored(os.path.basename(cog), "magenta")} !', 'ERROR')
 
     # ---------------------------------------------------
 

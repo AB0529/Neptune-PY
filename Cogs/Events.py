@@ -19,7 +19,7 @@ class Events(commands.Cog):
             return await self.util.embed(ctx, f':x: | `{ctx.command}` cannot be used in DMs!')
 
         self.nep.util.log(f'Command Error', exc, f'{ctx.author.name}#{ctx.author.discriminator}')
-        await self.nep.util.error(ctx, 'Command Error', exc.__cause__)
+        await self.nep.util.error(ctx, 'Command Error', exc)
 
     # ---------------------------------------------------
 
