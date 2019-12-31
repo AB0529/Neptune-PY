@@ -40,7 +40,7 @@ class Utils:
     async def embed(self, c, content):
         embed = discord.Embed(description=content, color=self.r_color())
 
-        await c.send(embed=embed)
+        return await c.send(embed=embed)
 
     # ---------------------------------------------------
 
