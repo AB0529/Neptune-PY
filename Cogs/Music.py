@@ -8,16 +8,13 @@ class Music(commands.Cog):
     
     # ---------------------------------------------------
 
-    @nep.group()
-    async def show(self, c):
-        await c.sed('Su')
     # Queue command
     @commands.command(
-        name='queue', 
-        aliases=['q'],
-        description='Modify and show the server\'s queue.')
-    async def queue(self, c, *, flags):
-        await c.send(flags)
+    name='queue',
+    aliases=['q'],
+    descrription='Shows the queue')
+    async def queue(self, c):
+        pass
 
     # ---------------------------------------------------
 

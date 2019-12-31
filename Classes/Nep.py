@@ -22,6 +22,7 @@ class Nep(commands.Bot):
         )
 
         self.util = Utils(self)
+        self.queues = {} # Music queues
     
     # ---------------------------------------------------
     

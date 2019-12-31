@@ -2,8 +2,10 @@ import os
 import random
 
 import discord
+from discord.ext import commands
 from termcolor import colored
 
+from Classes.Setup_Queue import Setup_Queue
 
 # Utils class
 class Utils:
@@ -45,4 +47,64 @@ class Utils:
     async def error(self, c, title, error):
         await self.embed(c, f':x: Error | Oh fucking shit, an **error occured**!\n```xl\nType: {title}\n\n{error}\n```')
 
+
+
+    # =-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-
+    # Music
+    # =-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-
+
+
+    # Returns the queue for the guild
+    # TODO: Move this into MongoDB/SQLite
+    async def get_queue(self, guild):
+        # Check if guild id is in queues
+        if guild.id in self.nep.queues:
+            return self.nep.queues[guild.id]
+        
+        # If not, add it and return the queue
+        self.nep.queues[guild.id] = Setup_Queue()
+        return self.nep.queues[guild.id]
+
     # ---------------------------------------------------
+
+    # Checks if bot is currently playing
+    async def is_playing(self, c):
+        voice_client = c.guild.voice_client
+
+        # Is playing
+        if voice_client and voice_client.channel and voice_client.source:
+            return True
+        
+        # Not playing, raise not playing error
+        raise commands.Command('Not currently playing anything.')
+
+    # ---------------------------------------------------
+
+    # Checks if author is in same voice channel as bot
+    async def is_in_voice_channel(self, c):
+        voice = c.author.voice
+        nep_voice = c.guild.voice_client
+
+        # Is in voice channel
+        if voice and nep_voice and voice.channel and nep_voice.channel and voice.channel == nep_voice.channel:
+            return True
+        
+        # If not, raise not in same vc error
+        raise commands.CommandError('Not in the same channel as bot to do this.')
+
+    # ---------------------------------------------------
+
+    # Checks if the author is the audio reqestor
+    async def is_audio_requestor(self, c):
+        queue = await self.get_queue(c.guild)
+        perms = c.channel.permissions_for(c.author)
+
+        # Check if user is admin or requestor
+        if perms.adimistrator or queue.is_requestor(c.author):
+            return True
+        
+        # If not requestor, raise error
+        raise commands.CommandError('Need to be the song requestor to do that.')
+
+    # ---------------------------------------------------
+    
