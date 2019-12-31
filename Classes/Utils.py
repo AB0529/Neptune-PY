@@ -1,3 +1,4 @@
+import os
 import random
 
 import discord
@@ -21,6 +22,14 @@ class Utils:
     def log(self, title='no title', content='no content', misc=''):
         print(f'[{colored(title, "blue")}] <> {content} ({colored(misc, "yellow")})')
 
+
+    # ---------------------------------------------------
+
+    # Retrive list of all cogs
+    def get_all_cogs(self):
+        cogs = [self.nep.get_cog(f'Cogs.{f.replace(".py", "")}') for f in os.listdir('Cogs') if not f.startswith('__')]
+
+        return cogs
 
     # ---------------------------------------------------
 
