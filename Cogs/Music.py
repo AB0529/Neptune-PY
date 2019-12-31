@@ -22,11 +22,10 @@ class Music(commands.Cog):
         # Find queue text
         if len(q) > 0:
             q_text = [f':dancer: | **{len(q)}** total in the queue:']
-            q_text += [
-                f'{index + 1}) [{item.title}]({item.url}) **[{item.requested_by}]**' for (index, item) in enumerate(q)]
+            q_text += [f'{index + 1}) [{item.title}]({item.url}) **[{item.requested_by}]**' for (index, item) in enumerate(q)]
             
             # Send queue
-            return await self.nep.util.embed(c, q_text.join('\n'))
+            return await self.nep.util.embed(c, '\n'.join(q_text))
         
         # Queue is empty
         await self.nep.util.embed(c, '<a:WhereTf:539164678480199720> | *You can\'t list anything if there\'s nothing to list*')
@@ -42,7 +41,7 @@ class Music(commands.Cog):
     )
     @commands.guild_only()
     async def play(self, c, *args):
-        q = await self.nep.util.get_queue(c)._queue
+        q = self.nep.util.get_queue(c.guild)._queue
         args = ' '.join(args).lower().split(' ')
         direct_play = False
 
@@ -61,14 +60,29 @@ class Music(commands.Cog):
                 return
 
             # Append video to queue
-            q.append(r['result'][0])
             video = Setup_Video(r['result'][0], c.author)
+            q.append(video)
 
-            print(q)
-            return await c.send(embed=discord.Embed(
-                description=f'📹 | Added [{video.title}]({video.url}) **[{video.requested_by}]**',
-                thumbnail=video.thumbnail,
-                color=self.nep.util.r_color()))
+            q_embed = discord.Embed(
+                description=f'📹 | Enqueued [{video.title}]({video.url}) **[{video.requested_by}]**',
+                color=self.nep.util.r_color())
+            q_embed.set_thumbnail(url=video.thumbnail)
+            return await c.send(embed=q_embed)
+        
+        # Send search list
+        r = self.nep.util.get_video('+'.join(args), 5)
+        # Handle fail
+        if (r['state'] != 'success'):
+            raise commands.CommandError(f'API error: {r["message"]}')
+            return
+        
+        input_str = ['Type **a number to chose** video (15 sec):']
+        input_str += [f'{index + 1}) [{item.title}]({item.url})' for (index, item) in enumerate(r[''])]
+        # Send inputs
+        await self.nep.util.embed(c, '\n'.join(input_str))
+        responses = await c.wait_for_message(author=c.message.author, timeout=15)
+
+        await c.send(responses.clean_content)
 
     # ---------------------------------------------------
 
