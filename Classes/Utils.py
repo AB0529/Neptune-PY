@@ -1,5 +1,6 @@
 import os
 import random
+import requests
 
 import discord
 from discord.ext import commands
@@ -43,6 +44,14 @@ class Utils:
 
     # ---------------------------------------------------
 
+    # Seaches Nep API for YouTube video
+    def get_video(self, search, max_resulsts=1):
+        r = requests.get(f'{self.nep.config.api_url}/yt_video?key={self.nep.config.api_key}&search={search}&max_results={max_resulsts}')
+
+        return r['body']
+
+    # ---------------------------------------------------
+
     # Handle errors 
     async def error(self, c, title, error):
         await self.embed(c, f':x: Error | Oh fucking shit, an **error occured**!\n```xl\nType: {title}\n\n{error}\n```')
@@ -56,13 +65,14 @@ class Utils:
 
     # Returns the queue for the guild
     # TODO: Move this into MongoDB/SQLite
-    async def get_queue(self, guild):
+    def get_queue(self, guild):
         # Check if guild id is in queues
         if guild.id in self.nep.queues:
             return self.nep.queues[guild.id]
         
         # If not, add it and return the queue
         self.nep.queues[guild.id] = Setup_Queue()
+        print(self.nep.queues)
         return self.nep.queues[guild.id]
 
     # ---------------------------------------------------

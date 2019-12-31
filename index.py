@@ -9,11 +9,15 @@ from dotenv import load_dotenv
 load_dotenv()
 prefix = os.getenv('PREFIX')
 token = os.getenv('TOKEN')
+api_key = os.getenv('API_KEY')
+api_url = os.getenv('API_URL')
 
 # Create config dict
 config = {
     'prefix': prefix,
-    'token': token
+    'token': token,
+    'api_key': api_key,
+    'api_url': api_url
 }
 
 # Sets up bot
