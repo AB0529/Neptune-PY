@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 
+from Classes.Setup_Video import Setup_Video
+
 # Create events cog
 class Music(commands.Cog):
     def __init__(self, nep):
@@ -21,7 +23,7 @@ class Music(commands.Cog):
         if len(q) > 0:
             q_text = [f':dancer: | **{len(q)}** total in the queue:']
             q_text += [
-                f'{index + 1}) [{item.title}]({item.link}) **[{item.requested_by}]**' for (index, item) in enumerate(q)]
+                f'{index + 1}) [{item.title}]({item.url}) **[{item.requested_by}]**' for (index, item) in enumerate(q)]
             
             # Send queue
             return await self.nep.util.embed(c, q_text.join('\n'))
@@ -40,6 +42,7 @@ class Music(commands.Cog):
     )
     @commands.guild_only()
     async def play(self, c, *args):
+        q = await self.nep.util.get_queue(c)._queue
         args = ' '.join(args).lower().split(' ')
         direct_play = False
 
@@ -49,10 +52,23 @@ class Music(commands.Cog):
         
         # Direct play without sending search results
         if direct_play == True:
-            args = args.pop('-d')
+            args.pop(args.index('-d'))
 
-            result = self.nep.util.get_video(' '.join(args))
-            await c.send(result)
+            r = self.nep.util.get_video('+'.join(args))
+            # Handle fails
+            if (r['state'] != 'success'):
+                raise commands.CommandError(f'API error: {r["message"]}')
+                return
+
+            # Append video to queue
+            q.append(r['result'][0])
+            video = Setup_Video(r['result'][0], c.author)
+
+            print(q)
+            return await c.send(embed=discord.Embed(
+                description=f'📹 | Added [{video.title}]({video.url}) **[{video.requested_by}]**',
+                thumbnail=video.thumbnail,
+                color=self.nep.util.r_color()))
 
     # ---------------------------------------------------
 

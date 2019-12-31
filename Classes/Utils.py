@@ -46,9 +46,9 @@ class Utils:
 
     # Seaches Nep API for YouTube video
     def get_video(self, search, max_resulsts=1):
-        r = requests.get(f'{self.nep.config.api_url}/yt_video?key={self.nep.config.api_key}&search={search}&max_results={max_resulsts}')
+        r = requests.get(f'{self.nep.config["api_url"]}/yt_video?key={self.nep.config["api_key"]}&search={search}&max_results={max_resulsts}')
 
-        return r['body']
+        return r.json()
 
     # ---------------------------------------------------
 
