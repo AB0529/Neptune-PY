@@ -1,4 +1,4 @@
-import discord, random, ast
+import discord, random, ast, os
 from discord.ext import commands
 
 
@@ -19,7 +19,15 @@ class Utils(commands.Cog):
 
     # Easy error handle
     async def error(self, c, _type='Idfk', error='Error handler errored, wack'):
-        await self.embed(c, f':x: Error | Oh nose, an **error occured**!\n```css\nType: {_type}\n\n{error}\n```')
+        await self.embed(c, f':x: Error | Oh nose, an **error occured**!\n```xl\nType: {_type}\n\n{error}\n```')
+
+    # -----------------------------------------------------------------
+
+    # Returns list of all cogs
+    def get_all_cogs(self):
+        cogs = [self.nep.get_cog(f'Cogs.{f.replace(".py", "")}') for f in os.listdir('Cogs') if not f.startswith('__')]
+
+        return cogs
 
     # -----------------------------------------------------------------
 
@@ -38,6 +46,24 @@ class Utils(commands.Cog):
         # for with blocks, again we insert returns into the body
         if isinstance(body[-1], ast.With):
             self.insert_returns(body[-1].body)
+
+    # -----------------------------------------------------------------
+
+    # Checks for correct flags
+    def get_queue_flags(self, args, acceptable_flags):
+        correct_flags = list(acceptable_flags.keys())
+        aliases = [acceptable_flags[cf] for cf in correct_flags]
+
+        print(correct_flags, aliases)
+
+        if args in correct_flags or args in aliases:
+            print('YEE')
+            print(correct_flags, aliases)
+
+            return correct_flags[args]
+
+        # return f'-{args}' in correct_flags or map(lambda a: f'-{args}' in a, acceptable_flags[correct_flags])
+        return False 
 
     # -----------------------------------------------------------------
 

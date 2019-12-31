@@ -13,10 +13,10 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, exc):
         # Ignore command not existing
-        if 'is not found' in str(exc):
+        if isinstance(exc, commands.CommandNotFound):
             return
 
-        print(f'[{ctx.author.name}{ctx.author.discriminator}] - {ctx.author.guild.id}] <> {exc}')
+        print(f'[{ctx.author.name}#{ctx.author.discriminator}] - {ctx.author.guild.id} - {ctx.author.guild.name}] <> {exc}')
         await self.util.error(ctx, 'Command Error', exc)
 
     # -----------------------------------------------------------------

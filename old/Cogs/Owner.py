@@ -1,5 +1,5 @@
 from discord.ext import commands
-import discord, sys, ast, subprocess
+import discord, sys, ast, subprocess, os
 
 # Owner category
 class Owner(commands.Cog):
@@ -54,6 +54,11 @@ class Owner(commands.Cog):
     )
     @commands.is_owner()
     async def reload(self, c, cog):
+        cogs = self.util.get_all_cogs()
+        commands = [co.get_commands() for co in cogs]
+
+        await c.send(commands)
+
         # Reload cog
         self.nep.reload_extension(f'Cogs.{cog.capitalize()}')
         await self.util.embed(c, f'🌀 | Cog `{cog}` has been reloaded')
@@ -69,7 +74,7 @@ class Owner(commands.Cog):
     )
     @commands.is_owner()
     async def eval(self, c, *, code):
-        code = code.strip('` ')
+        code = code.strip(' ')
         # Add indentation
         code = '\n'.join(f'    {i}' for i in code.splitlines())
         # Warp code 
@@ -115,7 +120,7 @@ class Owner(commands.Cog):
         # Run command
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         # Get outputs
-        (output, err) = proc.communicate()
+        (output) = proc.communicate()
         output = str(output).split('\\n')
         proc_status = proc.wait()
         nl = '\n'
