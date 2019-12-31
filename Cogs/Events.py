@@ -14,9 +14,12 @@ class Events(commands.Cog):
         # Ignore command not existing
         if isinstance(exc, commands.CommandNotFound):
             return
+        # Respond to command disabled for dm
+        elif isinstance(exc, commands.NoPrivateMessage):
+            return await self.util.embed(ctx, f':x: | `{ctx.command}` cannot be used in DMs!')
 
         self.nep.util.log(f'Command Error', exc, f'{ctx.author.name}#{ctx.author.discriminator}')
-        await self.util.error(ctx, 'Command Error', exc)
+        await self.nep.util.error(ctx, 'Command Error', exc.__cause__)
 
     # ---------------------------------------------------
 
