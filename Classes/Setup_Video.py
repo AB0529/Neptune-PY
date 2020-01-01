@@ -1,10 +1,12 @@
 import discord
+import pafy
 
 # Creates the video object
 class Setup_Video:
     def __init__(self, v, requestor):
-        self.stream_url = v['video']['url'] # Stream url
+        
         self.url = v['video']['url'] # Video url
+        self.stream_url = pafy.new(self.url).getbest().url # Video stream url
         self.title = v['video']['title'] # Video title
         self.thumbnail = v['thumbnail']['default']['url'] # Video thumbnail url
         self.requested_by = requestor # Song requestor

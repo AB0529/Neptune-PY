@@ -86,7 +86,7 @@ class Utils:
             return True
         
         # Not playing, raise not playing error
-        raise commands.Command('Not currently playing anything.')
+        raise commands.CommandError('Not currently playing anything.')
 
     # ---------------------------------------------------
 

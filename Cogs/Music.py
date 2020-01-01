@@ -123,15 +123,13 @@ class Music(commands.Cog):
     # Checks vc status
     async def check_vc(self, c, vc, message, q, video):
         if vc and vc.channel:
-            await self.reaction_controls(message)
-            return 
+            return
         
         if c.author.voice != None and c.author.voice.channel != None:
-            channel = c.voice.channel
+            channel = c.author.voice.channel
             client = await channel.connect()
-            self.play_song(client, q, video)
+            self.play_song(client, self.nep.util.get_queue(c.guild), video)
             message = await c.send('', embed=video.get_embed())
-            await self.reaction_controls(message)
 
             return
         
@@ -147,70 +145,24 @@ class Music(commands.Cog):
         users_in_channel = len([member for member in channel.members if not member.bot]) 
 
         if (float(len(q.skip_votes)) / users_in_channel) >= 0.5:
-            # Skip song
             channel.guild.voice_client.stop()
-
     # ---------------------------------------------------
 
     # Plays queue
-    async def play_song(self, client, q, video):
+    def play_song(self, client, q, video):
         q.now_playing = video
         q.skip_votes = set()
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(video.stream_url), volume=q.volume)
 
+
         def ap(err):
             if len(q._queue) > 0:
-                next_song = q._queue.pop(0)
+                q.next_song = q._queue.pop(0)
                 self.play_song(client, q, video)
             else:
                 asyncio.run_coroutine_threadsafe(client.disconnect(), self.nep.loop)
             
         client.play(source, after=ap)
-
-
-    # ---------------------------------------------------
-
-    # Responds to reactions added to bot message
-    async def on_reaction_add(self, reaction, user):
-        message = reaction.message
-
-        if user != self.nep.user and message.author == self.nep.user:
-            await message.remove_reaction(reaction, user)
-
-            if message.guild and message.guild.voice_client:
-                user_in_channel = user.voice and user.voice.channel and user.voice.channel == message.guild.voice_client.channel
-                permissions = message.channel.permissions_for(user)
-                guild = message.guild
-                q = self.nep.util.get_queue(guild)
-                if permissions.administrator or (user_in_channel and q.is_requester(user)):
-                    client = message.guild.voice_client
-                    if reaction.emoji == '⏯':
-                        self.pause_audio(client)
-                    elif reaction.emoji == '⏭':
-                        client.stop()
-                    elif reaction.emoji == '⏮':
-                        q.playlist.insert(0, q.now_playing)
-                        client.stop()
-                elif reaction.emoji == '⏭' and user_in_channel and message.guild.voice_client and message.guild.voice_client.channel:
-                    voice_channel = message.guild.voice_client.channel
-                    self.vote_skip(voice_channel, user)
-
-                    channel = message.channel
-                    users_in_channel = len([member for member in voice_channel.members if not member.bot]) 
-                    required_votes = math.ceil(0.5 * users_in_channel)
-
-                    vote_skip_embed = discord.Embed(color=self.nep.util.r_color())
-                    vote_skip_embed(f'✒️ | **[{user.mention}]** voted to skip (`{len(q.skip_votes)/required_votes}` votes)')
-
-                    await channel.send(embed=vote_skip_embed)
-    # ---------------------------------------------------
-    
-    # Reaction controls
-    async def reaction_controls(self, message):
-        controls = ['⏮', '⏯', '⏭']
-        
-        for c in controls:
-            await message.add_reaction(controls)
 
     # ---------------------------------------------------
 

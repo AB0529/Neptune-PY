@@ -6,6 +6,8 @@ class Setup_Queue:
         self._queue = [] # The server's queue/playlist
         self.vote_skip = set() # Keep track of skip votes
         self.now_playing = None # Current playing audio
+        self.next_song = None # Next song
+        self.playeer = None # Current player
     
     # ---------------------------------------------------
 
